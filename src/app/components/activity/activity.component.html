@@ -1,0 +1,56 @@
+<div class="timeline-event">
+  <app-timeline-item [isInputFocused]="isInputFocused"></app-timeline-item>
+  <div class="timeline-container">
+    <div class="timeline-details-container">
+      <div class="details">
+        <form [formGroup]="messageForm" (ngSubmit)="onSubmit()">
+          <p class="title">
+            <textarea
+              class="text-input"
+              id="message"
+              formControlName="message"
+              (focus)="isInputFocused = true"
+              [class.focused]="isInputFocused"
+              placeholder="Add a note about Milton Romaguera.."
+            ></textarea>
+          </p>
+          @if(messageForm.controls['message'].invalid &&
+          messageForm.controls['message'].touched){
+          <span class="error">Message is required</span>
+          } @if(isInputFocused || messageForm.controls['message'].value){
+          <div class="description">
+            <div class="icons-group">
+              @for(iconType of getNoteKeys; track iconType) {
+              <button
+                class="icon"
+                type="button"
+                title="Delete"
+                (click)="selectIcon(iconType)"
+                [class.selected]="selectedActivity === iconType"
+              >
+                <i
+                  [class]="activityTypeMappingOptions[iconType].icon"
+                  [class.selected]="selectedActivity === iconType"
+                ></i>
+              </button>
+              }
+            </div>
+            <button class="submit-btn" type="submit" [disabled]="isSubmitting">
+              Submit
+            </button>
+          </div>
+          }
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="timeline">
+  @for(activity of activityList; track activity.id) {
+  <app-activity-item
+    [activity]="activity"
+    (removeActivity)="removeActivity($event)"
+  ></app-activity-item>
+  }
+</div>
